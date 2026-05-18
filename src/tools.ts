@@ -1,7 +1,7 @@
 import { z, type ZodTypeAny } from 'zod';
 import { callRpc } from './supabase.js';
 
-const WEB_URL = (process.env.SONSUCHUP_WEB_URL ?? 'https://sonsuchup.vercel.app').replace(
+const WEB_URL = (process.env.SONSUCHUP_WEB_URL ?? 'https://sonsuchup.com').replace(
   /\/$/,
   '',
 );

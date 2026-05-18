@@ -5,7 +5,7 @@
 [![node](https://img.shields.io/node/v/sonsuchup-mcp.svg)](https://nodejs.org)
 
 > **손수첩(Sonsuchup)** — 추리·사건 정리용 개인 웹 도구를 Claude Desktop, Cursor 등 MCP 클라이언트에 연결하는 stdio 서버.
-> **Sonsuchup MCP server** — Stdio bridge that lets Claude Desktop, Cursor, and other MCP clients read and write your case-investigation data on https://sonsuchup.vercel.app.
+> **Sonsuchup MCP server** — Stdio bridge that lets Claude Desktop, Cursor, and other MCP clients read and write your case-investigation data on https://sonsuchup.com.
 
 ---
 
@@ -13,12 +13,12 @@
 
 ### 손수첩이 뭔가요?
 
-[손수첩](https://sonsuchup.vercel.app)은 추리소설·미스터리·실제 사건을 정리하기 위한 개인 웹 도구입니다. 사건 개요, 인물관계도, 알리바이, 타임라인, 기록을 한 곳에서 다룰 수 있습니다. 이 MCP 서버는 그 데이터를 AI 도구로도 다룰 수 있게 해 줍니다.
+[손수첩](https://sonsuchup.com)은 추리소설·미스터리·실제 사건을 정리하기 위한 개인 웹 도구입니다. 사건 개요, 인물관계도, 알리바이, 타임라인, 기록을 한 곳에서 다룰 수 있습니다. 이 MCP 서버는 그 데이터를 AI 도구로도 다룰 수 있게 해 줍니다.
 
 ### 시작하기 (30초)
 
 #### 1. 토큰 발급
-[손수첩 웹](https://sonsuchup.vercel.app) → 회원가입/로그인 → 우측 상단 **⚙ 설정** → **MCP 연결** → **새 토큰 발급**. 평문 토큰(`sonsu_mcp_...`)은 발급 직후 한 번만 표시되니 즉시 복사하세요.
+[손수첩 웹](https://sonsuchup.com) → 회원가입/로그인 → 우측 상단 **⚙ 설정** → **MCP 연결** → **새 토큰 발급**. 평문 토큰(`sonsu_mcp_...`)은 발급 직후 한 번만 표시되니 즉시 복사하세요.
 
 #### 2. Claude Desktop에 등록
 
@@ -70,7 +70,7 @@ sonsuchup MCP로 내 사건 목록 보여줘
 | 이름 | 필수 | 설명 |
 |---|---|---|
 | `SONSUCHUP_TOKEN` | ✅ | 손수첩 웹에서 발급한 MCP 토큰 |
-| `SONSUCHUP_WEB_URL` | ❌ | 응답 url의 베이스. 기본 `https://sonsuchup.vercel.app` |
+| `SONSUCHUP_WEB_URL` | ❌ | 응답 url의 베이스. 기본 `https://sonsuchup.com` |
 | `SONSUCHUP_SUPABASE_URL` | ❌ | 기본값 = 손수첩 운영 인스턴스 |
 | `SONSUCHUP_SUPABASE_ANON_KEY` | ❌ | 기본값 내장 (anon, 공개 정보) |
 
@@ -126,12 +126,12 @@ Claude Desktop에서 publish 전 버전 테스트하려면:
 
 ### What is Sonsuchup?
 
-[Sonsuchup](https://sonsuchup.vercel.app) (손수첩, "hand notebook") is a personal web tool for organizing detective fiction, mysteries, and real-life cases — overview, people graph, alibis, timeline, and field notes in one place. This MCP server exposes that data to AI assistants.
+[Sonsuchup](https://sonsuchup.com) (손수첩, "hand notebook") is a personal web tool for organizing detective fiction, mysteries, and real-life cases — overview, people graph, alibis, timeline, and field notes in one place. This MCP server exposes that data to AI assistants.
 
 ### Quick start
 
 #### 1. Issue a token
-On [sonsuchup.vercel.app](https://sonsuchup.vercel.app), sign up / log in → ⚙ Settings → **MCP 연결** → **새 토큰 발급**. The plaintext token (`sonsu_mcp_...`) is shown **once** — copy it immediately.
+On [sonsuchup.com](https://sonsuchup.com), sign up / log in → ⚙ Settings → **MCP 연결** → **새 토큰 발급**. The plaintext token (`sonsu_mcp_...`) is shown **once** — copy it immediately.
 
 #### 2. Register with Claude Desktop
 Claude Desktop → Settings → Developer → Edit Config → add:
@@ -181,7 +181,7 @@ Every response includes a `url` to the case page in the Sonsuchup web app so the
 | Name | Required | Description |
 |---|---|---|
 | `SONSUCHUP_TOKEN` | ✅ | MCP token issued from the Sonsuchup web app |
-| `SONSUCHUP_WEB_URL` | ❌ | Base URL used in response `url` fields. Default `https://sonsuchup.vercel.app` |
+| `SONSUCHUP_WEB_URL` | ❌ | Base URL used in response `url` fields. Default `https://sonsuchup.com` |
 | `SONSUCHUP_SUPABASE_URL` | ❌ | Defaults to the production Sonsuchup instance |
 | `SONSUCHUP_SUPABASE_ANON_KEY` | ❌ | Built-in default (anon, publishable) |
 

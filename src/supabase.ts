@@ -10,7 +10,7 @@ export const TOKEN = process.env.SONSUCHUP_TOKEN ?? '';
 if (!TOKEN) {
   process.stderr.write(
     '[sonsuchup-mcp] SONSUCHUP_TOKEN 환경 변수가 필요합니다.\n' +
-      '손수첩 웹(https://sonsuchup.vercel.app) → 설정 → MCP 연결에서 발급하세요.\n',
+      '손수첩 웹(https://sonsuchup.com) → 설정 → MCP 연결에서 발급하세요.\n',
   );
   process.exit(1);
 }
