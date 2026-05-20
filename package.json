@@ -1,6 +1,6 @@
 {
   "name": "sonsuchup-mcp",
-  "version": "0.2.0",
+  "version": "0.3.0",
   "description": "MCP server for 손수첩 (Sonsuchup) — Connect the case-investigation web tool to Claude Desktop, Cursor, and other MCP clients.",
   "type": "module",
   "bin": {

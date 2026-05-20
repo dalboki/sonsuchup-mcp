@@ -77,7 +77,7 @@ admin@example.com 계정으로 전환해줘        (→ use_account)
 
 `SONSUCHUP_TOKEN`이 기본(활성) 계정이며 `use_account`로 전환합니다. 활성 계정은 메모리에만 유지되어 Claude Desktop을 재시작하면 다시 기본 계정으로 돌아갑니다.
 
-### 제공 도구 (12개)
+### 제공 도구 (13개)
 
 **계정**
 
@@ -98,6 +98,7 @@ admin@example.com 계정으로 전환해줘        (→ use_account)
 | `add_person` | 인물 추가 |
 | `add_alibi` | 인물에 알리바이 추가 |
 | `add_record` | 사건 기록 추가 |
+| `add_clue` | 단서(현장 물건·관찰) 추가 |
 | `add_edge` | 인물 간 관계 추가 |
 | `delete_case` | 사건 삭제 (되돌릴 수 없음) |
 
@@ -227,7 +228,7 @@ Switch to admin@example.com                   (→ use_account)
 
 `SONSUCHUP_TOKEN` is the default (active) account; `use_account` switches it. The active account lives in memory only and resets to the default when Claude Desktop restarts.
 
-### Tools (12)
+### Tools (13)
 
 **Accounts**
 
@@ -248,6 +249,7 @@ Switch to admin@example.com                   (→ use_account)
 | `add_person` | Add a person |
 | `add_alibi` | Add an alibi to a person |
 | `add_record` | Add a case record |
+| `add_clue` | Add a clue (a crime-scene object/observation) |
 | `add_edge` | Add a relationship between two people |
 | `delete_case` | Delete a case (irreversible) |
 

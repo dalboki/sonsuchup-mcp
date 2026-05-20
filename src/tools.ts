@@ -31,6 +31,7 @@ type CaseData = {
   edges: EdgeData[];
   customEvents: { id: number; name: string; time: string; note: string }[];
   records: RecordData[];
+  clues: ClueData[];
 };
 
 type PersonData = {
@@ -54,6 +55,7 @@ type PersonData = {
 type AlibiData = { start: string; end: string; content: string; status: string };
 type EdgeData = { id: number; from: number; to: number; label: string };
 type RecordData = { id: number; time: string; content: string; selected: boolean };
+type ClueData = { id: number; title: string; content: string };
 
 async function fetchCase(id: string): Promise<CaseData> {
   const data = await callRpc<CaseData | null>('mcp_get_case', { p_id: id });
@@ -229,6 +231,7 @@ export const tools: ToolDef[] = [
         edges: [],
         customEvents: [],
         records: [],
+        clues: [],
       };
       const id = await saveCase(newCase);
       return { id, url: caseUrl(id) };
@@ -368,6 +371,24 @@ export const tools: ToolDef[] = [
         content: input.content,
         selected: false,
       });
+      await saveCase(c);
+      return { localId, url: caseUrl(input.caseId) };
+    },
+  },
+  {
+    name: 'add_clue',
+    description:
+      '사건에 단서를 추가합니다. 단서는 사건 현장의 물건·관찰을 자유 서술로 적는 항목입니다. title은 짧은 라벨(선택), content는 자유 서술(필수). 예: title "타다 만 종이", content "식탁 위 접시에 타다 만 종이 — 재와 귀퉁이만 남아 텍스트의 형태는 알 수 없음".',
+    inputSchema: z.object({
+      caseId: z.string().uuid(),
+      title: z.string().optional().describe('짧은 라벨 (선택)'),
+      content: z.string().min(1).describe('단서 내용 — 현장의 물건·관찰을 자유롭게 서술'),
+    }),
+    handler: async (input: { caseId: string; title?: string; content: string }) => {
+      const c = await fetchCase(input.caseId);
+      c.clues = c.clues ?? [];
+      const localId = nextLocalId(c.clues);
+      c.clues.push({ id: localId, title: input.title ?? '', content: input.content });
       await saveCase(c);
       return { localId, url: caseUrl(input.caseId) };
     },
