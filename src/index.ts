@@ -9,7 +9,7 @@ import { zodToJsonSchema } from 'zod-to-json-schema';
 import { tools } from './tools.js';
 
 const server = new Server(
-  { name: 'sonsuchup-mcp', version: '0.1.0' },
+  { name: 'sonsuchup-mcp', version: '0.2.0' },
   { capabilities: { tools: {} } },
 );
 

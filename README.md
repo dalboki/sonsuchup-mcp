@@ -49,7 +49,45 @@ sonsuchup MCP로 내 사건 목록 보여줘
 "테스트 사건"을 만들고 인물 두 명을 추가해줘
 ```
 
-### 제공 도구 (9개)
+#### 4. 여러 계정 연결 (선택)
+
+계정을 여러 개 쓴다면 `env`에 `SONSUCHUP_TOKEN_2`, `SONSUCHUP_TOKEN_3` … 을 추가하세요. 각 토큰은 **해당 계정으로 손수첩에 로그인한 상태에서** 따로 발급해야 합니다.
+
+```json
+{
+  "mcpServers": {
+    "sonsuchup": {
+      "command": "npx",
+      "args": ["-y", "sonsuchup-mcp"],
+      "env": {
+        "SONSUCHUP_TOKEN": "sonsu_mcp_개인계정-토큰",
+        "SONSUCHUP_TOKEN_2": "sonsu_mcp_관리계정-토큰"
+      }
+    }
+  }
+}
+```
+
+연결 후 대화에서:
+```
+지금 어느 손수첩 계정에 연결돼 있어?       (→ whoami)
+연결된 손수첩 계정 목록 보여줘             (→ list_accounts)
+admin@example.com 계정으로 전환해줘        (→ use_account)
+```
+
+`SONSUCHUP_TOKEN`이 기본(활성) 계정이며 `use_account`로 전환합니다. 활성 계정은 메모리에만 유지되어 Claude Desktop을 재시작하면 다시 기본 계정으로 돌아갑니다.
+
+### 제공 도구 (12개)
+
+**계정**
+
+| 이름 | 용도 |
+|---|---|
+| `whoami` | 현재 활성 계정(이메일) 확인 |
+| `list_accounts` | 설정된 모든 계정 목록 (활성 표시 포함) |
+| `use_account` | 이메일로 활성 계정 전환 |
+
+**사건**
 
 | 이름 | 용도 |
 |---|---|
@@ -69,7 +107,8 @@ sonsuchup MCP로 내 사건 목록 보여줘
 
 | 이름 | 필수 | 설명 |
 |---|---|---|
-| `SONSUCHUP_TOKEN` | ✅ | 손수첩 웹에서 발급한 MCP 토큰 |
+| `SONSUCHUP_TOKEN` | ✅ | 손수첩 웹에서 발급한 MCP 토큰 (기본/활성 계정) |
+| `SONSUCHUP_TOKEN_2` … `SONSUCHUP_TOKEN_20` | ❌ | 추가 계정 토큰 (다중 계정 연결용) |
 | `SONSUCHUP_WEB_URL` | ❌ | 응답 url의 베이스. 기본 `https://sonsuchup.com` |
 | `SONSUCHUP_SUPABASE_URL` | ❌ | 기본값 = 손수첩 운영 인스턴스 |
 | `SONSUCHUP_SUPABASE_ANON_KEY` | ❌ | 기본값 내장 (anon, 공개 정보) |
@@ -160,7 +199,45 @@ Find alibi contradictions in the "Moonlight Hotel Room 401" murder case
 Create a test case and add two people to it
 ```
 
-### Tools (9)
+#### 4. Connect multiple accounts (optional)
+
+To use more than one account, add `SONSUCHUP_TOKEN_2`, `SONSUCHUP_TOKEN_3` … to `env`. Each token must be issued **while logged into that account** on the Sonsuchup web app.
+
+```json
+{
+  "mcpServers": {
+    "sonsuchup": {
+      "command": "npx",
+      "args": ["-y", "sonsuchup-mcp"],
+      "env": {
+        "SONSUCHUP_TOKEN": "sonsu_mcp_personal-account-token",
+        "SONSUCHUP_TOKEN_2": "sonsu_mcp_admin-account-token"
+      }
+    }
+  }
+}
+```
+
+Then, in chat:
+```
+Which Sonsuchup account am I connected to?   (→ whoami)
+List my connected Sonsuchup accounts          (→ list_accounts)
+Switch to admin@example.com                   (→ use_account)
+```
+
+`SONSUCHUP_TOKEN` is the default (active) account; `use_account` switches it. The active account lives in memory only and resets to the default when Claude Desktop restarts.
+
+### Tools (12)
+
+**Accounts**
+
+| Name | Purpose |
+|---|---|
+| `whoami` | Show the currently active account (email) |
+| `list_accounts` | List all configured accounts (with the active one marked) |
+| `use_account` | Switch the active account by email |
+
+**Cases**
 
 | Name | Purpose |
 |---|---|
@@ -180,7 +257,8 @@ Every response includes a `url` to the case page in the Sonsuchup web app so the
 
 | Name | Required | Description |
 |---|---|---|
-| `SONSUCHUP_TOKEN` | ✅ | MCP token issued from the Sonsuchup web app |
+| `SONSUCHUP_TOKEN` | ✅ | MCP token issued from the Sonsuchup web app (default/active account) |
+| `SONSUCHUP_TOKEN_2` … `SONSUCHUP_TOKEN_20` | ❌ | Additional account tokens (for multi-account use) |
 | `SONSUCHUP_WEB_URL` | ❌ | Base URL used in response `url` fields. Default `https://sonsuchup.com` |
 | `SONSUCHUP_SUPABASE_URL` | ❌ | Defaults to the production Sonsuchup instance |
 | `SONSUCHUP_SUPABASE_ANON_KEY` | ❌ | Built-in default (anon, publishable) |

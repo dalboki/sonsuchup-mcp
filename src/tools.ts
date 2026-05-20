@@ -1,5 +1,13 @@
 import { z, type ZodTypeAny } from 'zod';
-import { callRpc } from './supabase.js';
+import {
+  callRpc,
+  callRpcWith,
+  allTokens,
+  activeToken,
+  getActiveIndex,
+  setActiveIndex,
+  tokenCount,
+} from './supabase.js';
 
 const WEB_URL = (process.env.SONSUCHUP_WEB_URL ?? 'https://sonsuchup.com').replace(
   /\/$/,
@@ -68,7 +76,99 @@ export type ToolDef = {
   handler: (args: any) => Promise<unknown>;
 };
 
+/** 토큰 → 계정 이메일 (세션 캐시). 실패 시 error 포함. */
+const accountEmailCache = new Map<string, string | null>();
+async function resolveAccount(
+  token: string,
+): Promise<{ email: string | null; error?: string }> {
+  if (accountEmailCache.has(token)) {
+    return { email: accountEmailCache.get(token) ?? null };
+  }
+  try {
+    const r = await callRpcWith<{ userId: string; email: string | null }>(
+      token,
+      'mcp_whoami',
+      {},
+    );
+    const email = r?.email ?? null;
+    accountEmailCache.set(token, email);
+    return { email };
+  } catch (err) {
+    return { email: null, error: err instanceof Error ? err.message : String(err) };
+  }
+}
+
 export const tools: ToolDef[] = [
+  {
+    name: 'whoami',
+    description:
+      '지금 활성화된 손수첩 계정(이메일)을 반환합니다. 사용자가 "지금 어느 계정에 연결돼 있어?", "이 MCP 계정이 뭐야?"라고 물으면 이 도구를 사용하세요.',
+    inputSchema: z.object({}),
+    handler: async () => {
+      const acc = await resolveAccount(activeToken());
+      if (acc.error) throw new Error(acc.error);
+      return {
+        email: acc.email,
+        account: getActiveIndex() + 1,
+        totalAccounts: tokenCount(),
+      };
+    },
+  },
+  {
+    name: 'list_accounts',
+    description:
+      '이 MCP 서버에 설정된 모든 손수첩 계정의 이메일 목록을 반환합니다. 현재 활성 계정은 active=true로 표시됩니다. 여러 계정을 연결했을 때 어떤 계정들이 있는지 확인할 때 사용하세요.',
+    inputSchema: z.object({}),
+    handler: async () => {
+      const tokens = allTokens();
+      const accounts: Record<string, unknown>[] = [];
+      for (let i = 0; i < tokens.length; i++) {
+        const acc = await resolveAccount(tokens[i]);
+        accounts.push({
+          account: i + 1,
+          email: acc.email,
+          active: i === getActiveIndex(),
+          ...(acc.error ? { error: acc.error } : {}),
+        });
+      }
+      return { totalAccounts: tokens.length, accounts };
+    },
+  },
+  {
+    name: 'use_account',
+    description:
+      '활성 손수첩 계정을 전환합니다. 사용자가 이메일을 지정하며 "이 계정으로 연결해줘 / 전환해줘"라고 하면 이 도구를 사용하세요. 전환 후의 모든 사건 도구 호출은 이 계정에 적용됩니다. 단, 전환하려는 계정은 미리 Claude Desktop 설정에 토큰(SONSUCHUP_TOKEN_2 등)으로 등록돼 있어야 합니다.',
+    inputSchema: z.object({
+      email: z.string().min(1).describe('전환할 계정의 이메일 주소'),
+    }),
+    handler: async ({ email }: { email: string }) => {
+      const target = email.trim().toLowerCase();
+      const tokens = allTokens();
+      let matchIndex = -1;
+      let matchEmail: string | null = null;
+      const known: string[] = [];
+      for (let i = 0; i < tokens.length; i++) {
+        const acc = await resolveAccount(tokens[i]);
+        if (acc.email) {
+          known.push(acc.email);
+          if (acc.email.toLowerCase() === target) {
+            matchIndex = i;
+            matchEmail = acc.email;
+          }
+        }
+      }
+      if (matchIndex < 0) {
+        throw new Error(
+          `"${email}" 계정이 이 서버 설정에 없습니다. ` +
+            `사용 가능한 계정: ${known.length ? known.join(', ') : '(없음)'}. ` +
+            `새 계정을 쓰려면 손수첩 웹에서 토큰을 발급해 Claude Desktop 설정의 ` +
+            `SONSUCHUP_TOKEN_2 등에 추가한 뒤 Claude Desktop을 재시작하세요.`,
+        );
+      }
+      setActiveIndex(matchIndex);
+      return { ok: true, active: matchEmail, account: matchIndex + 1 };
+    },
+  },
   {
     name: 'list_cases',
     description:
